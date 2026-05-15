@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Dose of Music</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="song-search">
+        <img src="images/search-13-128.png" alt="Search icon" />
+        <input type="text" placeholder="Search for songs..." />
+        <button class="search-button">Search</button>
+      </div>
+      <div class="nav-links">
+        <a href="index.html" class="active">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="chill.html">Chill</a>
+      </div>
+      <div class="profile-icon"></div>
+    </div>
+
+    <main>
+      <div class="main-container">
+        <div class="title" style="display: flex;">
+          <h1>Daily Dose of Music</h1> 
+          <br><img src="girl.gif" style="width:200px;">
+        </div>
+        <div class="button-container">
+          <button id="login">Login</button>
+          <button id="signup">Sign Up</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    document.querySelector('.search-button').addEventListener('click', () => {
+      window.location.href = 'discover.html';
+    });
+
+    document.querySelector('.song-search input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        window.location.href = 'discover.html';
+      }
+    });
+
+    document.getElementById('login').addEventListener('click', () => {
+      window.location.href = 'login.html';
+    });
+
+    document.getElementById('signup').addEventListener('click', () => {
+      window.location.href = 'signup.html';
+    });
+
+    async function checkUserSession() {
+    try {
+      const response = await fetch('get_prefrences.php', {
+        method: 'GET',
+        credentials: 'include'
+      });
+      const data = await response.json();
+      return data.preferences !== undefined;
+    } catch (error) {
+      console.error('Error checking user session:', error);
+      return false;
+    }
+    }
+  </script>
+</body>
+
+</html>

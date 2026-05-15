@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Music Player</title>
+  <link rel="stylesheet" href="discover.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#172554">
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+</head>
+
+<body>
+  <div class="main-content">
+    <div class="top-bar">
+      <div class="song-search">
+        <img src="images/search-13-128.png" alt="Search icon" />
+        <input type="text" placeholder="Search for songs..." />
+        <button class="search-button">Search</button>
+      </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="#" class="active">Discover</a>
+        <a href="chill.html">Chill</a>
+      </div>
+      <div class="profile-icon"></div>
+    </div>
+    <h2>Recommended for You</h2>
+    <div class="album-grid" id="recommended-grid">
+      <!-- Recommended songs will be dynamically generated -->
+    </div>
+    <h2>Discover New</h2>
+    <div class="album-grid" id="discover-new-grid">
+      <!-- Discover new songs will be dynamically generated -->
+    </div>
+  </div>
+  <div class="cd-player droppable">
+    <div class="cd-player-inner"></div>
+  </div>
+
+  <script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      console.log('Spotify SDK Ready');
+      window.spotifySDKReady = true; // Rename to match api.js
+    };
+  </script>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="api.js"></script>
+</body>
+
+</html>
