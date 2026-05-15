@@ -1,202 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Playlist View</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap"
-      rel="stylesheet"
-    />
-    
-    <link rel="stylesheet" href="chill.css" />
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #00205b;
-        color: white;
-      }
-      .container {
-        display: flex;
-        height: 100vh;
-      }
-      .left-side {
-        flex: 1;
-        padding: 20px;
-      }
-      .right-side {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-      }
-      h1 {
-        font-family: "Montserrat", sans-serif;
-        font-size: 30px;
-        margin-bottom: 20px;
-      }
-      .playlist-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 25px;
-      }
-      .playlist-item {
-        border: 2px solid #5663f7;
-        border-radius: 20px;
-        padding: 10px;
-        text-align: center;
-      }
-      .playlist-icon {
-        width: 60px;
-        height: 70px;
-        margin: 0 auto;
-        background-color: #ffd700;
-        clip-path: polygon(
-          0% 20%,
-          20% 0%,
-          80% 0%,
-          100% 20%,
-          100% 80%,
-          80% 100%,
-          20% 100%,
-          0% 80%
-        );
-      }
-      .playlist-name {
-        margin-top: 10px;
-        font-size: 14px;
-      }
-      .song-count {
-        font-size: 12px;
-        color: #ccc;
-      }
-      .cd-player {
-        width: 200px;
-        height: 200px;
-        background-color: #8b4513;
-        border-radius: 50%;
-        margin-bottom: 20px;
-        position: relative;
-      }
-      .cd {
-        width: 160px;
-        height: 160px;
-        background-color: #000;
-        border-radius: 50%;
-        position: absolute;
-        top: 20px;
-        left: 20px;
-      }
-      .cd-center {
-        width: 20px;
-        height: 20px;
-        background-color: #32cd32;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .discord-status {
-        background-color: #7289da;
-        padding: 10px 20px;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-      }
-      .discord-dot {
-        width: 10px;
-        height: 10px;
-        background-color: #32cd32;
-        border-radius: 50%;
-        margin-right: 10px;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <nav>
-        <div class="navigation">
-          <div class="navigation-items">
-            <a href="index.html">Home</a>
-            <a href="discover.html">Discover</a>
-            <a href="chill.html">Chill</a>
-          </div>
-        </div>
-        <div class="profile">
-          <img src="images/photo_2024-12-13_19-27-20.jpg" alt="Avatar" />
-        </div>
-      </nav>
-    </header>
 
-  
-    <div class="container">
-      <div class="left-side">
-        <h1>Playlist</h1>
-        <div class="playlist-grid">
-          <div class="playlist-item">
-            <img src="images/1.png" />
-            <div class="playlist-name">Chill Vibes</div>
-            <div class="song-count">12 songs</div>
-          </div>
-          <div class="playlist-item">
-            <img src="images/2.png" />
-            <div class="playlist-name">Workout Mix</div>
-            <div class="song-count">15 songs</div>
-          </div>
-          <div class="playlist-item">
-            <img src="images/3.png" />
-            <div class="playlist-name">Study Session</div>
-            <div class="song-count">20 songs</div>
-          </div>
-          <!-- Add more playlist items as needed -->
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Playlists</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="main-container">
+    <div class="top-bar">
+      <div class="song-search">
+        <img src="images/search-13-128.png" alt="Search icon" />
+        <input type="text" placeholder="Search for songs..." />
+        <button class="search-button">Search</button>
       </div>
-      <div class="right-side">
-        <img src="images/Musicplayer.png" />
-        <div class="discord-status">
-          <div class="discord-dot"></div>
-          Discord Connected
-        </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="chill.html" class="active">Chill</a>
       </div>
+      <div class="profile-icon"></div>
     </div>
-  </body>
-</html>
+
+
+    <div class="container">
+
+      <div class="left-side">
+        <h1>Your Playlists</h1>
+
+        <div class="playlist-grid"></div>
+      </div>
+
+      <div class="right-side">
+
+        <div class="cd-player">
+          <div class="cd-player-inner"></div>
+        </div>
+
+        <div id="playlist-view" class="playlist-view">
+          <h2>Select a playlist</h2>
+          <div id="song-list"></div>
+        </div>
+
+      </div>
+
+    </div>
+
     <script>
-      const draggables = document.querySelectorAll(".draggable");
-      const droppable = document.querySelector(".droppable");
+      const playlistManager = {
+        getAll() {
+          return JSON.parse(localStorage.getItem("playlists")) || {};
+        },
 
-      draggables.forEach((draggable) => {
-        draggable.addEventListener("dragstart", () => {
-          draggable.classList.add("dragging");
+        get(name) {
+          return this.getAll()[name] || [];
+        }
+      };
+
+      let currentPlaylist = [];
+      let currentIndex = 0;
+
+
+      function loadPlaylists() {
+        const grid = document.querySelector(".playlist-grid");
+        const data = playlistManager.getAll();
+
+        grid.innerHTML = "";
+
+        const names = Object.keys(data);
+
+        if (names.length === 0) {
+          grid.innerHTML = "<p>No playlists yet</p>";
+          return;
+        }
+
+        names.forEach(name => {
+          const songs = data[name];
+
+          const item = document.createElement("div");
+          item.className = "playlist-item";
+
+          item.innerHTML = `
+          <div class="playlist-item>
+            <div class="playlist-icon">🎵</div>
+            <div>
+              <div class="playlist-name">${name}</div>
+              <div class="song-count">${songs.length} songs</div>
+            </div>
+          </div>
+          `;
+
+          item.addEventListener("click", () => {
+            openPlaylist(name);
+          });
+
+          grid.appendChild(item);
+        });
+      }
+
+      function openPlaylist(name) {
+        const songs = playlistManager.get(name);
+
+        currentPlaylist = songs;
+        currentIndex = 0;
+
+        const list = document.getElementById("song-list");
+        list.innerHTML = `<h3>${name}</h3>`;
+
+        songs.forEach((song, index) => {
+          const div = document.createElement("div");
+          div.className = "song-item";
+
+          div.innerText = `${song.title} - ${song.artist}`;
+
+          div.addEventListener("click", () => {
+            playSong(index);
+          });
+
+          list.appendChild(div);
         });
 
-        draggable.addEventListener("dragend", () => {
-          draggable.classList.remove("dragging");
+        if (songs.length > 0) {
+          playSong(0);
+        }
+      }
+
+      async function playSong(index) {
+        currentIndex = index;
+
+        const song = currentPlaylist[index];
+        if (!song) return;
+
+        const query = `${song.title} ${song.artist}`;
+
+        const res = await fetch(
+          `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=YOUR_YOUTUBE_API_KEY&type=video&maxResults=1`
+        );
+
+        const data = await res.json();
+
+        const video = data.items?.[0];
+        if (!video) return;
+
+        document.querySelector(".cd-player-inner").innerHTML = `
+    <iframe width="100%" height="100%"
+      src="https://www.youtube.com/embed/${video.id.videoId}?autoplay=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  `;
+
+        highlightSong(index);
+      }
+
+      function highlightSong(index) {
+        document.querySelectorAll(".song-item").forEach((el, i) => {
+          el.classList.toggle("active", i === index);
         });
-      });
+      }
 
-      droppable.addEventListener("dragover", (e) => {
-        e.preventDefault();
-        droppable.classList.add("drag-over");
-      });
-
-      droppable.addEventListener("dragleave", () => {
-        droppable.classList.remove("drag-over");
-      });
-
-      droppable.addEventListener("drop", (e) => {
-        e.preventDefault();
-        droppable.classList.remove("drag-over");
-        droppable.classList.add("playing");
-      });
-
-      droppable.addEventListener("click", () => {
-        droppable.classList.toggle("playing");
-      });
+      loadPlaylists();
     </script>
-  </body>
+
+</body>
+
 </html>

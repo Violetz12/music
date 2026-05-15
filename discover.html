@@ -4,51 +4,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Music Player</title>
+  <title>Discover Music</title>
+
   <link rel="stylesheet" href="discover.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <meta name="theme-color" content="#172554">
-  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
 </head>
 
 <body>
+
   <div class="main-content">
+
+    <!-- TOP BAR -->
     <div class="top-bar">
+
       <div class="song-search">
-        <img src="images/search-13-128.png" alt="Search icon" />
-        <input type="text" placeholder="Search for songs..." />
+        <input type="text" placeholder="Search songs..." />
         <button class="search-button">Search</button>
       </div>
+
       <div class="nav-links">
         <a href="index.html">Home</a>
-        <a href="#" class="active">Discover</a>
-        <a href="chill.html">Chill</a>
+        <a href="discover.html" class="active">Discover</a>
+        <a href="chill.html">Playlists</a>
       </div>
-      <div class="profile-icon"></div>
+
     </div>
-    <h2>Recommended for You</h2>
-    <div class="album-grid" id="recommended-grid">
-      <!-- Recommended songs will be dynamically generated -->
-    </div>
-    <h2>Discover New</h2>
-    <div class="album-grid" id="discover-new-grid">
-      <!-- Discover new songs will be dynamically generated -->
-    </div>
+
+    <h2>Recommended</h2>
+    <div class="album-grid" id="recommended-grid"></div>
+
+    <h2>Discover</h2>
+    <div class="album-grid" id="discover-new-grid"></div>
+
   </div>
-  <div class="cd-player droppable">
+
+  <!-- PLAYER -->
+  <div class="cd-player">
     <div class="cd-player-inner"></div>
   </div>
 
   <script>
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      console.log('Spotify SDK Ready');
-      window.spotifySDKReady = true; // Rename to match api.js
+    const API_KEY = "13cc8bfa580be368a5b6ae7743cc2dee";
+    const YOUTUBE_API_KEY = "AIzaSyBjoaq2gMZRcAtMHFP-xOr7xoabwI2O3T4";
+
+    const playlistManager = {
+      get() {
+        return JSON.parse(localStorage.getItem("playlists")) || {};
+      },
+
+      add(name, song) {
+        const data = this.get();
+
+        if (!data[name]) data[name] = [];
+
+        data[name].push(song);
+
+        localStorage.setItem("playlists", JSON.stringify(data));
+      }
     };
+
+    // ---------- YOUTUBE ----------
+    async function playTrack(title, artist) {
+      const query = `${title} ${artist} official music video`;
+
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&key=${YOUTUBE_API_KEY}&type=video&maxResults=5`
+      );
+
+      const data = await res.json();
+
+      const video = data.items?.[0];
+
+      if (!video) return;
+
+      const videoId = video.id.videoId;
+
+      document.querySelector(".cd-player-inner").innerHTML = `
+    <iframe width="100%" height="100%"
+      src="https://www.youtube.com/embed/${videoId}?autoplay=1"
+      frameborder="0"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  `;
+    }
+
+    // ---------- RENDER ----------
+    function renderTracks(tracks, gridId) {
+      const grid = document.getElementById(gridId);
+      grid.innerHTML = "";
+
+      tracks.forEach(track => {
+
+        const title = track.name;
+        const artist =
+          track.artist?.name || track.artist;
+
+        const image =
+          track.image?.[2]?.["#text"] ||
+          "https://via.placeholder.com/150";
+
+        const card = document.createElement("div");
+        card.className = "album-card";
+
+        card.innerHTML = `
+      <div class="album-art"
+        style="background-image:url('${image}')">
+
+        <button class="play">▶</button>
+        <button class="add">+</button>
+
+      </div>
+
+      <div class="track-info">
+        <div>${title}</div>
+        <small>${artist}</small>
+      </div>
+    `;
+
+        // PLAY
+        card.querySelector(".play")
+          .addEventListener("click", () => {
+            playTrack(title, artist);
+          });
+
+        // ADD TO PLAYLIST
+        card.querySelector(".add")
+          .addEventListener("click", () => {
+            const name = prompt("Playlist name?");
+            if (!name) return;
+
+            playlistManager.add(name, {
+              title,
+              artist,
+              image
+            });
+
+            alert("Added!");
+          });
+
+        grid.appendChild(card);
+      });
+    }
+
+    // ---------- SEARCH ----------
+    async function search(q) {
+      const res = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${q}&api_key=${API_KEY}&format=json`
+      );
+
+      const data = await res.json();
+
+      const tracks =
+        data.results.trackmatches.track;
+
+      renderTracks(tracks, "recommended-grid");
+    }
+
+    // ---------- DEFAULT ----------
+    async function loadTrending() {
+      const res = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=chart.gettoptracks&api_key=${API_KEY}&format=json`
+      );
+
+      const data = await res.json();
+
+      renderTracks(
+        data.tracks.track,
+        "recommended-grid"
+      );
+    }
+
+    async function loadDiscover() {
+      const genres = ["pop", "rock", "jazz", "edm"];
+
+      const random =
+        genres[Math.floor(Math.random() * genres.length)];
+
+      const res = await fetch(
+        `https://ws.audioscrobbler.com/2.0/?method=track.search&track=${random}&api_key=${API_KEY}&format=json`
+      );
+
+      const data = await res.json();
+
+      renderTracks(
+        data.results.trackmatches.track,
+        "discover-new-grid"
+      );
+    }
+
+    // ---------- INIT ----------
+    loadTrending();
+    loadDiscover();
+
+    document.querySelector(".search-button")
+      .addEventListener("click", () => {
+        const q = document.querySelector(".song-search input").value;
+        search(q);
+      });
+
+    document.querySelector(".song-search input")
+      .addEventListener("input", e => {
+        if (e.target.value.length > 2) search(e.target.value);
+        if (e.target.value.length === 0) loadTrending();
+      });
   </script>
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
-  <script src="api.js"></script>
+
 </body>
 
 </html>
