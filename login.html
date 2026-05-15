@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,17 +59,14 @@
         }
     </style>
 </head>
+
 <body>
-    <header>
-        <nav>
-            <div class="navigation">
-                <div class="navigation-items">
-                    <a href="index.html">Home</a>
-                    <a href="discover.html">Discover</a>
-                    <a href="about.html">About</a>
-                </div>
-            </div>
-        </nav>
+    <header class="top-bar">
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="discover.html">Discover</a>
+            <a href="chill.html" class="active">Chill</a>
+        </div>
     </header>
 
     <div class="login-container">
@@ -82,7 +80,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
             </div>
-            
+
             <button type="submit">Login</button>
         </form>
     </div>
@@ -97,16 +95,17 @@
             pref.addEventListener('click', () => {
                 pref.classList.toggle('selected');
                 const genre = pref.dataset.genre;
-                
+
                 if (selectedPreferences.has(genre)) {
                     selectedPreferences.delete(genre);
                 } else {
                     selectedPreferences.add(genre);
                 }
-                
+
                 preferencesInput.value = Array.from(selectedPreferences).join(',');
             });
         });
     </script>
 </body>
+
 </html>

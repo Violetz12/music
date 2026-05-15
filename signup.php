@@ -8,6 +8,7 @@ $dbPassword = '';
 $dbName = 'music_app';
 
 // Create connection
+$conn = new mysqli("localhost", "root", "", "music_app");
 $conn = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
 
 // Check connection

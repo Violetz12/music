@@ -1,0 +1,201 @@
+/* ========== RESET ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #0b1b3a, #081226);
+    color: white;
+    min-height: 100vh;
+    padding-top: 90px;
+}
+
+/* ========== TOP BAR ========== */
+.top-bar {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1100px, calc(100% - 32px));
+    padding: 14px 20px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: rgba(20, 40, 90, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    z-index: 1000;
+}
+
+.nav-links {
+    display: flex;
+    gap: 24px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+.nav-links a:hover {
+    color: white;
+}
+
+.nav-links a.active {
+    color: white;
+    position: relative;
+}
+
+.nav-links a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #5271ff;
+    border-radius: 2px;
+}
+
+/* ========== SIGNUP CARD ========== */
+.signup-container {
+    width: min(600px, calc(100% - 32px));
+    margin: 40px auto;
+    padding: 28px;
+
+    background: rgba(15, 30, 70, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+h2,
+h3 {
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+/* ========== FORM ========== */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    background: rgba(10, 25, 60, 0.8);
+    color: white;
+
+    outline: none;
+    transition: 0.2s;
+}
+
+.form-group input:focus {
+    border-color: #5271ff;
+    box-shadow: 0 0 0 3px rgba(82, 113, 255, 0.2);
+}
+
+/* ========== SEARCH ========== */
+.search-genres input {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(10, 25, 60, 0.8);
+    color: white;
+    margin-bottom: 12px;
+}
+
+/* ========== GENRE GRID ========== */
+.genres-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.genre-item {
+    padding: 10px;
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: 0.15s;
+    user-select: none;
+}
+
+.genre-item:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.genre-item.selected {
+    background: #5271ff;
+    border-color: #5271ff;
+}
+
+/* ========== BUTTON ========== */
+button[type="submit"] {
+    width: 100%;
+    margin-top: 18px;
+    padding: 12px 14px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #5271ff;
+    color: white;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+button[type="submit"]:hover {
+    background: #3f5eff;
+    transform: translateY(-1px);
+}
+
+/* ========== ERROR ========== */
+.error-message {
+    display: none;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+
+    background: rgba(255, 80, 80, 0.15);
+    border: 1px solid rgba(255, 80, 80, 0.3);
+    color: #ff6b6b;
+
+    border-radius: 10px;
+    font-size: 13px;
+}
